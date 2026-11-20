@@ -1,0 +1,6 @@
+{
+  "name": "Kichi BAZAR",
+  "description": "Lindos detalles para expresar tu cariño. Tienda de regalos online en Iquique, Chile: productos personalizados, papelería creativa, belleza Oriflame, joyas y manualidades.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
