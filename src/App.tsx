@@ -215,14 +215,16 @@ export default function App() {
                         </a>
                       </div>
                     )}
+                                        {category.id === 'oriflame' && (
+                      <div className="mt-10">
+                        <OriflameSection />
+                      </div>
+                    )}
+
                   </div>
                 );
               })}
-                               {category.id === 'oriflame' && (
-                   <div className="mt-10">
-                     <OriflameSection />
-                   </div>
-                 )}
+  
 
             </div>
           )}
