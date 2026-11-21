@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-hand: "Caveat", cursive;
+
+  --color-cream: #fdf9f6;
+  --color-cream-warm: #faf3ec;
+  --color-rose-pale: #fdf0ed;
+  --color-peach-soft: #fbe5d8;
+  --color-ink: #3b2a28;
+  --color-ink-muted: #6e5854;
+  --color-rose-gold: #b86f68;
+  --color-rose-gold-deep: #8f4e48;
+  --color-kintsugi-gold: #c9a15d;
+  --color-macaron-mint: #e3f0e8;
+  --color-macaron-lavender: #ede6f5;
+  --color-macaron-vanilla: #fbf2d8;
+  --color-macaron-rose: #fae4e2;
+  --color-macaron-peach: #fce8dc;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+  }
+}
+
+/* Kintsugi metallic borders & button finishes */
+.kintsugi-border {
+  position: relative;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#fffdfb, #fffdfb) padding-box,
+    linear-gradient(135deg, #e5c391 0%, #c99a6b 35%, #d69891 68%, #ebd2a4 100%) border-box;
+}
+
+.kintsugi-border-rose {
+  position: relative;
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(180deg, #fffdfb 0%, #fdf5f2 100%) padding-box,
+    linear-gradient(135deg, #d7978f 0%, #ecc79c 45%, #b86f68 75%, #e9c597 100%) border-box;
+}
+
+.btn-rose-gold {
+  background: linear-gradient(135deg, #c97f78 0%, #b56560 48%, #d2977b 100%);
+  box-shadow:
+    0 6px 18px -6px rgba(181, 101, 96, 0.45),
+    inset 0 1px 0 rgba(255, 245, 238, 0.55);
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1), filter 180ms ease;
+}
+
+.btn-rose-gold:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+  box-shadow:
+    0 10px 24px -8px rgba(181, 101, 96, 0.52),
+    inset 0 1px 0 rgba(255, 248, 242, 0.7);
+}
+
+.btn-rose-gold:active {
+  transform: translateY(0);
+}
+
+.btn-rose-gold-outline {
+  background: linear-gradient(180deg, rgba(255, 253, 251, 0.96) 0%, rgba(253, 242, 238, 0.96) 100%);
+  border: 1px solid #c9927c;
+  box-shadow:
+    0 4px 14px -6px rgba(184, 111, 104, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), background-color 180ms ease, border-color 180ms ease;
+}
+
+.btn-rose-gold-outline:hover {
+  transform: translateY(-1px);
+  border-color: #b56560;
+  background: #fff8f5;
+}
+
+/* Delicate kintsugi hairline divider */
+.kintsugi-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(201, 161, 93, 0.35) 18%,
+    rgba(197, 131, 121, 0.75) 50%,
+    rgba(201, 161, 93, 0.35) 82%,
+    transparent 100%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-rose-gold,
+  .btn-rose-gold-outline {
+    transition: none;
+  }
+  .btn-rose-gold:hover,
+  .btn-rose-gold-outline:hover {
+    transform: none;
+  }
+}
