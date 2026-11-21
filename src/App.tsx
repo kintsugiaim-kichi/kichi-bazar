@@ -215,7 +215,7 @@ export default function App() {
                         </a>
                       </div>
                     )}
-                                        {category.id === 'oriflame' && (
+                                        {category.id === 'belleza' && (
                       <div className="mt-10">
                         <OriflameSection />
                       </div>
