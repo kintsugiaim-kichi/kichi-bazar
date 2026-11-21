@@ -218,12 +218,17 @@ export default function App() {
                   </div>
                 );
               })}
+                               {category.id === 'oriflame' && (
+                   <div className="mt-10">
+                     <OriflameSection />
+                   </div>
+                 )}
+
             </div>
           )}
         </section>
 
-        <OriflameSection />
-
+      
         <HowToBuy />
       </main>
 
