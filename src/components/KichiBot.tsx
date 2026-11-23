@@ -21,6 +21,9 @@ interface BotFaqItem {
   buttonLabel: string;
   answer: string;
   whatsappText: string;
+  whatsappButtonLabel?: string;
+  customWhatsappUrl?: string;
+  isGreenWhatsapp?: boolean;
   showOriflameButton?: boolean;
 }
 
@@ -31,51 +34,55 @@ interface ChatMessage {
   showWhatsappButton?: boolean;
   whatsappButtonLabel?: string;
   whatsappSummary?: string;
+  customWhatsappUrl?: string;
+  isGreenWhatsapp?: boolean;
   showOriflameButton?: boolean;
   isError?: boolean;
 }
 
 const DEFAULT_QUICK_FAQS: BotFaqItem[] = [
   {
-    id: 'fandom-simpatia',
-    buttonLabel: '🦙 ¿Qué es Fandom Simpatía Selectiva?',
+    id: 'pedido-o-personalizado',
+    buttonLabel: '¿Cómo hago un pedido o pido algo personalizado?',
     answer:
-      'Es nuestro fandom y espacio creativo para quienes nos identificamos con una forma de ser no tan popular y muchas veces incomprendida. Porque no es obligación ser iguales a todos, y nuestra manera particular de ser también tiene un espacio en este mundo y puede aportar luz, a nuestra propia manera. 🦙✨ La línea de productos Simpatía Selectiva es nuestro lienzo de expresión para conectar con quienes tienen un sentido del humor y personalidad, que no siempre sigue el guion social.',
+      'Para productos disponibles en stock solo debes escribirnos por WhatsApp indicándonos tu elección. Si deseas crear un diseño personalizado desde cero, te enviaremos nuestro formulario especial para tomar cada detalle con cariño.',
     whatsappText:
-      '¡Hola Kichi BAZAR! Quiero conocer más sobre la colección Fandom Simpatía Selectiva 🦙✨',
+      'Hola Kichi! Me gustaría hacer un pedido o solicitar el formulario de personalizados',
+    whatsappButtonLabel: 'Pedir o solicitar formulario por WhatsApp',
+    customWhatsappUrl: STORE_LINKS.whatsappFormOrderUrl,
+    isGreenWhatsapp: true,
   },
   {
-    id: 'productos-disponibles',
-    buttonLabel: '✨ ¿Qué productos tienen disponibles?',
+    id: 'pagos-y-entregas',
+    buttonLabel: '¿Cuáles son las formas de pago y entregas?',
     answer:
-      'En Kichi BAZAR tenemos detalles pensados para regalar o regalarte: tazones personalizados y mágicos, totebags con diseños exclusivos, kits de regalo armados con cariño y una selección especial de belleza y cuidado personal Oriflame. ¡Revisa nuestro catálogo aquí mismo!',
+      'Trabajamos con transferencia electrónica y efectivo (solo en retiros). Si retiras tu pedido en Iquique, reservas tu producto o inicias tu diseño personalizado con un 50% de abono vía transferencia, y pagas el 50% restante en efectivo o transferencia al retirar. Si prefieres envío a domicilio (coordinado con Kichi según disponibilidad de ruta o vía Uber Flash gestionado por la/el cliente), el pedido debe estar pagado al 100% vía transferencia antes de despachar. Por ahora realizamos entregas exclusivamente dentro de nuestra zona.',
     whatsappText:
-      '¡Hola Kichi BAZAR! Vi el catálogo en la página y quiero consultar disponibilidad de un producto.',
+      '¡Hola Kichi BAZAR! Quiero coordinar el pago y entrega de mi pedido en Iquique.',
   },
   {
-    id: 'como-hacer-pedido',
-    buttonLabel: '🛍️ ¿Cómo hago un pedido?',
+    id: 'empaques-regalo',
+    buttonLabel: '¿Tienen empaques para regalo?',
     answer:
-      '¡Es súper fácil y personalizado! Elige lo que te guste del catálogo, haz clic en el botón de WhatsApp aquí abajo para contarnos qué necesitas y te enviaremos un formulario breve para dejar todos los detalles de tu pedido y entrega ordenados.',
+      '¡Todos nuestros pedidos incluyen gratis nuestro KichiEmpaque Ecológico hecho a mano con reciclaje creativo para cuidar la Pachamama! 🌱 Además, si quieres llevarlo listo para celebrar, puedes sumar una Envoltura Tradicional (papel, cinta y tarjeta) o una Bolsa de Regalo por un pequeño valor adicional. ¡Mira las opciones y valores en la esquina superior de cada categoría! 🎁',
     whatsappText:
-      '¡Hola Kichi BAZAR! Quiero hacer un pedido, por favor envíame el formulario para coordinar.',
+      '¡Hola Kichi BAZAR! Quisiera consultar por las opciones de empaque para regalo.',
   },
   {
-    id: 'diseno-personalizado',
-    buttonLabel: '🎨 Quiero un diseño personalizado',
+    id: 'demora-pedido',
+    buttonLabel: '¿Cuánto demora mi pedido?',
     answer:
-      '¡Nos encanta crear piezas únicas! Podemos estampar tu nombre, una frase especial o esa imagen que tanto te gusta en tazones o totebags. Haz clic en el botón de WhatsApp aquí abajo, cuéntanos tu idea y te enviamos nuestro formulario rápido para dejar tu pedido agendado.',
+      'Los productos que tenemos listos en stock cuentan con coordinación rápida en Iquique. En cambio, los diseños personalizados toman unos días hábiles de elaboración artesanal, plazo que confirmamos contigo apenas recibimos tu formulario y tu abono del 50%.',
     whatsappText:
-      '¡Hola Kichi BAZAR! Quiero cotizar y agendar un diseño personalizado en tazón o totebag.',
+      '¡Hola Kichi BAZAR! Quisiera saber el tiempo estimado de entrega para mi pedido.',
   },
   {
-    id: 'catalogo-oriflame',
-    buttonLabel: '💄 Catálogo Oriflame',
+    id: 'cambios-devoluciones',
+    buttonLabel: '¿Hacen cambios o devoluciones?',
     answer:
-      'Trabajamos con productos originales de belleza, fragancias y cuidado de la piel de Oriflame por encargo y con stock seleccionado. Escríbenos directo a WhatsApp para enviarte el catálogo digital actualizado de esta campaña y asesorarte con lo que necesites.',
+      'En pedidos personalizados trabajamos estrictamente según las indicaciones y textos que registras en nuestro formulario (y confirmas antes de producir), por lo que no realizamos cambios ni devoluciones por arrepentimiento o errores en los datos enviados; además, el 50% de abono no es reembolsable una vez iniciado el diseño o compra de materiales. Solo cubrimos garantía por fallas de fabricación o error de transcripción nuestro reportado dentro de las primeras 24 horas. En envíos por Uber Flash gestionados por la/el cliente, embalamos cada pieza frágil con máxima protección y te enviamos foto antes de despachar; una vez entregado al transporte externo, el traslado queda bajo responsabilidad del servicio de reparto.',
     whatsappText:
-      '¡Hola Kichi BAZAR! Por favor envíame el catálogo digital actualizado de Oriflame de esta campaña 💄',
-    showOriflameButton: true,
+      '¡Hola Kichi BAZAR! Tengo una consulta sobre políticas de pedido o garantía.',
   },
 ];
 
@@ -90,7 +97,7 @@ export const KichiBot: React.FC<KichiBotProps> = ({ products }) => {
     {
       id: 'welcome',
       role: 'assistant',
-      text: '¡Hola! Soy KichiBot, tu anfitriona en Kichi BAZAR. Qué gusto saludarte por acá. Elige una pregunta rápida o escríbeme lo que buscas.',
+      text: '¡Hola! Soy KichiBot, tu anfitriona en Kichi BAZAR. Qué alegría saludarte por acá. Elige una pregunta rápida o cuéntame qué lindo detalle estás buscando.',
       showWhatsappButton: true,
       whatsappButtonLabel: 'Escribir por WhatsApp',
       whatsappSummary:
@@ -148,8 +155,10 @@ export const KichiBot: React.FC<KichiBotProps> = ({ products }) => {
       role: 'assistant',
       text: faq.answer,
       showWhatsappButton: true,
-      whatsappButtonLabel: 'Abrir WhatsApp',
+      whatsappButtonLabel: faq.whatsappButtonLabel || 'Abrir WhatsApp',
       whatsappSummary: faq.whatsappText,
+      customWhatsappUrl: faq.customWhatsappUrl,
+      isGreenWhatsapp: faq.isGreenWhatsapp,
       showOriflameButton: faq.showOriflameButton,
     };
 
@@ -259,7 +268,9 @@ export const KichiBot: React.FC<KichiBotProps> = ({ products }) => {
     }
   };
 
-  const buildWhatsappHref = (summary: string) => {
+  const buildWhatsappHref = (msg: ChatMessage) => {
+    if (msg.customWhatsappUrl) return msg.customWhatsappUrl;
+    const summary = msg.whatsappSummary || '';
     const separator = STORE_LINKS.whatsappBusiness.includes('?') ? '&' : '?';
     return `${STORE_LINKS.whatsappBusiness}${separator}text=${encodeURIComponent(summary)}`;
   };
@@ -270,7 +281,7 @@ export const KichiBot: React.FC<KichiBotProps> = ({ products }) => {
       {isOpen && (
         <aside
           aria-label="Chat con KichiBot"
-          className="fixed bottom-24 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[405px] h-[min(590px,78vh)] kintsugi-border rounded-2xl shadow-[0_24px_56px_-18px_rgba(92,58,49,0.42)] flex flex-col overflow-hidden bg-[#FDF9F6]"
+          className="fixed bottom-24 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[410px] h-[min(600px,78vh)] kintsugi-border rounded-2xl shadow-[0_24px_56px_-18px_rgba(92,58,49,0.42)] flex flex-col overflow-hidden bg-[#FDF9F6]"
         >
           {/* Cabecera */}
           <div className="flex items-center justify-between gap-3 px-4 py-3.5 bg-gradient-to-r from-[#FDF2EF] via-[#FDF9F6] to-[#FBEBE2] border-b border-[#EAD5C3]">
@@ -312,7 +323,7 @@ export const KichiBot: React.FC<KichiBotProps> = ({ products }) => {
                   className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}
                 >
                   <div
-                    className={`max-w-[88%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-line ${
+                    className={`max-w-[90%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-line ${
                       isUser
                         ? 'bg-[#F8E2DC] text-[#3B2A28] border border-[#E7C2B8] rounded-br-sm'
                         : 'bg-[#FFFDFB] text-[#3B2A28] border border-[#EAD9CA] rounded-bl-sm shadow-[0_4px_14px_-10px_rgba(92,58,49,0.2)]'
@@ -322,39 +333,45 @@ export const KichiBot: React.FC<KichiBotProps> = ({ products }) => {
 
                     {msg.showWhatsappButton && msg.whatsappSummary && (
                       <div className="mt-3 pt-3 border-t border-[#F0E2D5] space-y-2">
-                        <div className="rounded-lg bg-[#FAF3EC] border border-[#EAD9CA] p-2.5 text-xs text-[#6E5854]">
-                          <div className="flex items-center justify-between gap-2 mb-1">
-                            <span className="font-semibold text-[#57413D]">
-                              Mensaje para WhatsApp:
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                handleCopySummary(msg.id, msg.whatsappSummary ?? '')
-                              }
-                              className="inline-flex items-center gap-1 text-[11px] font-medium text-[#8F4E48] hover:underline cursor-pointer"
-                            >
-                              {copiedId === msg.id ? (
-                                <>
-                                  <Check className="w-3 h-3" aria-hidden="true" />
-                                  <span>Copiado</span>
-                                </>
-                              ) : (
-                                <>
-                                  <Copy className="w-3 h-3" aria-hidden="true" />
-                                  <span>Copiar</span>
-                                </>
-                              )}
-                            </button>
+                        {!msg.isGreenWhatsapp && (
+                          <div className="rounded-lg bg-[#FAF3EC] border border-[#EAD9CA] p-2.5 text-xs text-[#6E5854]">
+                            <div className="flex items-center justify-between gap-2 mb-1">
+                              <span className="font-semibold text-[#57413D]">
+                                Mensaje para WhatsApp:
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleCopySummary(msg.id, msg.whatsappSummary ?? '')
+                                }
+                                className="inline-flex items-center gap-1 text-[11px] font-medium text-[#8F4E48] hover:underline cursor-pointer"
+                              >
+                                {copiedId === msg.id ? (
+                                  <>
+                                    <Check className="w-3 h-3" aria-hidden="true" />
+                                    <span>Copiado</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Copy className="w-3 h-3" aria-hidden="true" />
+                                    <span>Copiar</span>
+                                  </>
+                                )}
+                              </button>
+                            </div>
+                            <p className="italic text-[#57413D]">{msg.whatsappSummary}</p>
                           </div>
-                          <p className="italic text-[#57413D]">{msg.whatsappSummary}</p>
-                        </div>
+                        )}
 
                         <a
-                          href={buildWhatsappHref(msg.whatsappSummary)}
+                          href={buildWhatsappHref(msg)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="btn-rose-gold w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold text-white whitespace-nowrap"
+                          className={
+                            msg.isGreenWhatsapp
+                              ? 'w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold text-white bg-[#1D8F4E] hover:bg-[#177840] transition-colors shadow-sm text-center'
+                              : 'btn-rose-gold w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold text-white whitespace-nowrap'
+                          }
                         >
                           <MessageCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                           <span>{msg.whatsappButtonLabel || 'Abrir WhatsApp'}</span>
@@ -405,7 +422,7 @@ export const KichiBot: React.FC<KichiBotProps> = ({ products }) => {
             </button>
 
             {showQuickFaqs && (
-              <div className="pt-1.5 pb-1 flex flex-col gap-1.5 max-h-40 overflow-y-auto">
+              <div className="pt-1.5 pb-1 flex flex-col gap-1.5 max-h-44 overflow-y-auto">
                 {faqs.map((faq) => (
                   <button
                     key={faq.id}
