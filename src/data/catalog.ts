@@ -45,6 +45,19 @@ export interface ProductItem {
   isOriflameLink?: boolean;
 }
 
+export interface PackagingInfo {
+  name: string;
+  description: string;
+  imageUrl: string | null;
+}
+
+export interface ShowcaseCardItem {
+  id: string;
+  title: string;
+  categoryId: Exclude<CategoryId, 'todos'>;
+  imageUrl: string | null;
+}
+
 /**
  * Enlaces editables de la tienda Kichi BAZAR.
  * Cambia cualquiera de estas URLs cuando necesites actualizarlas.
@@ -54,6 +67,8 @@ export const STORE_LINKS = {
     import.meta.env.VITE_GOOGLE_SHEETS_CSV_URL ||
     'https://docs.google.com/spreadsheets/d/e/2PACX-1vS4T9NneH0_lTmSJKOGjxGtqe9Rc9kBV7JPeDpReCalCUbSgS-_nLCfZFjqeF2cWwm4A2YrbWhKodHG/pub?output=csv',
   whatsappBusiness: 'https://wa.me/message/AJCBBPZYUQXNP1',
+  whatsappFormOrderUrl:
+    'https://wa.me/569XXXXXXXX?text=Hola%20Kichi!%20Me%20gustar%C3%ADa%20hacer%20un%20pedido%20o%20solicitar%20el%20formulario%20de%20personalizados',
   oriflameStore: 'https://shop.oriflame.com/CL-kichi8/cSSgjkmIV',
   oriflameSponsorText: 'fuiste invitado por Verónica Sol Cisternas/ kichi8',
   instagram: 'https://www.instagram.com/kichibazar.cl/',
@@ -63,6 +78,13 @@ export const STORE_LINKS = {
   heroPanoramic: '/assets/aistudio/portada_landing_y_pface_ccc0bb21.jpg',
   kichiBotAvatar: '/assets/aistudio/logo_kichi_bot_ff4bc4b4.png',
 } as const;
+
+export const DEFAULT_PACKAGING: PackagingInfo = {
+  name: '🎁 ¿Es para regalo?',
+  description:
+    '• KichiEmpaque Ecológico: Gratis (hecho a mano con reciclaje creativo)\n• Envoltura Tradicional: Papel, cinta y tarjeta (valor adicional)\n• Bolsa de Regalo: Lista para entregar (valor adicional)',
+  imageUrl: null,
+};
 
 export const CATEGORIES: CategoryInfo[] = [
   {
