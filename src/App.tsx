@@ -121,6 +121,16 @@ export default function App() {
   };
 
   const handleNavigateHomeSection = (sectionId?: string) => {
+    if (sectionId === 'belleza-oriflame') {
+      setSelectedCategory('belleza');
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          const el = document.getElementById('belleza-oriflame');
+          el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 60);
+      });
+      return;
+    }
     setSelectedCategory(null);
     if (!sectionId || sectionId === 'inicio') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -209,8 +219,6 @@ export default function App() {
                 </div>
               )}
             </section>
-
-            <OriflameSection />
 
             <HowToBuy />
           </>
