@@ -1,6 +1,18 @@
-import { CategoryId, ProductItem, ProductMotif } from '../data/catalog';
+import {
+  CategoryId,
+  PackagingInfo,
+  ProductItem,
+  ProductMotif,
+  ShowcaseCardItem,
+} from '../data/catalog';
 
 export type StoreCategoryId = Exclude<CategoryId, 'todos'>;
+
+export interface ParsedSheetCatalog {
+  products: ProductItem[];
+  packaging: PackagingInfo | null;
+  showcaseCards: ShowcaseCardItem[];
+}
 
 /**
  * Extrae el ID de archivo de una URL de Google Drive (después de "/d/" o "id=")
@@ -10,25 +22,21 @@ export function buildGoogleDriveImageUrl(rawUrl: string): string | null {
   const trimmed = rawUrl.trim();
   if (!trimmed) return null;
 
-  // Si ya viene en formato lh3.googleusercontent.com/d/ID
   const lh3Match = trimmed.match(/lh3\.googleusercontent\.com\/d\/([a-zA-Z0-9_-]+)/);
   if (lh3Match?.[1]) {
     return `https://lh3.googleusercontent.com/d/${lh3Match[1]}`;
   }
 
-  // Formato estándar: https://drive.google.com/file/d/ID/view...
   const pathIdMatch = trimmed.match(/\/d\/([a-zA-Z0-9_-]+)/);
   if (pathIdMatch?.[1]) {
     return `https://lh3.googleusercontent.com/d/${pathIdMatch[1]}`;
   }
 
-  // Formato query: https://drive.google.com/open?id=ID o uc?id=ID
   const queryIdMatch = trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
   if (queryIdMatch?.[1]) {
     return `https://lh3.googleusercontent.com/d/${queryIdMatch[1]}`;
   }
 
-  // Si es otro enlace de imagen http(s) directo, lo conservamos
   if (/^https?:\/\//i.test(trimmed)) {
     return trimmed;
   }
@@ -44,12 +52,28 @@ function normalizeText(value: string): string {
     .replace(/[\u0300-\u036f]/g, '');
 }
 
+export function isPackagingCategory(rawCategory: string): boolean {
+  const normalized = normalizeText(rawCategory);
+  return normalized === 'empaques' || normalized === 'empaque';
+}
+
+export function isShowcaseCategory(rawCategory: string): boolean {
+  const normalized = normalizeText(rawCategory);
+  return normalized === 'portada' || normalized === 'portadas';
+}
+
 export function mapSheetCategory(rawCategory: string): {
   id: StoreCategoryId;
   label: string;
 } | null {
   const normalized = normalizeText(rawCategory);
-  if (!normalized) return null;
+  if (
+    !normalized ||
+    isPackagingCategory(rawCategory) ||
+    isShowcaseCategory(rawCategory)
+  ) {
+    return null;
+  }
 
   if (normalized.includes('personaliz')) {
     return { id: 'personalizados', label: 'Productos Personalizados' };
@@ -63,7 +87,11 @@ export function mapSheetCategory(rawCategory: string): {
   if (normalized.includes('joya') || normalized.includes('plata')) {
     return { id: 'joyas', label: 'Joyas' };
   }
-  if (normalized.includes('manualid') || normalized.includes('reciclaj') || normalized.includes('hada')) {
+  if (
+    normalized.includes('manualid') ||
+    normalized.includes('reciclaj') ||
+    normalized.includes('hada')
+  ) {
     return { id: 'manualidades', label: 'Manualidades' };
   }
 
@@ -73,7 +101,7 @@ export function mapSheetCategory(rawCategory: string): {
 function pickMotif(category: StoreCategoryId, name: string): ProductMotif {
   const n = normalizeText(name);
   if (category === 'personalizados') {
-    if (n.includes('taza') || n.includes('mug')) return 'mug';
+    if (n.includes('taza') || n.includes('mug') || n.includes('tazon')) return 'mug';
     if (n.includes('bolsa') || n.includes('tote')) return 'tote';
     return 'giftset';
   }
@@ -87,7 +115,9 @@ function pickMotif(category: StoreCategoryId, name: string): ProductMotif {
     return 'necklace';
   }
   if (category === 'manualidades') {
-    if (n.includes('luz') || n.includes('luces') || n.includes('hada')) return 'fairylights';
+    if (n.includes('luz') || n.includes('luces') || n.includes('hada')) {
+      return 'fairylights';
+    }
     return 'upcycle';
   }
   return 'beauty';
@@ -154,9 +184,9 @@ export function parseCsvRows(csvText: string): string[][] {
   return rows.filter((row) => row.some((cell) => cell.trim() !== ''));
 }
 
-export function parseCatalogFromCsv(csvText: string): ProductItem[] {
+export function parseCatalogWithPackagingFromCsv(csvText: string): ParsedSheetCatalog {
   const rows = parseCsvRows(csvText);
-  if (rows.length < 2) return [];
+  if (rows.length < 2) return { products: [], packaging: null, showcaseCards: [] };
 
   const headers = rows[0].map((h) => normalizeText(h));
   const idxCategoria = headers.findIndex((h) => h.includes('categor'));
@@ -166,6 +196,8 @@ export function parseCatalogFromCsv(csvText: string): ProductItem[] {
   const idxFoto = headers.findIndex((h) => h.includes('foto') || h.includes('imag'));
 
   const products: ProductItem[] = [];
+  const showcaseCards: ShowcaseCardItem[] = [];
+  let packaging: PackagingInfo | null = null;
 
   for (let r = 1; r < rows.length; r++) {
     const row = rows[r];
@@ -174,6 +206,29 @@ export function parseCatalogFromCsv(csvText: string): ProductItem[] {
     const rawDesc = idxDescripcion >= 0 ? (row[idxDescripcion] ?? '') : (row[2] ?? '');
     const rawPrice = idxPrecio >= 0 ? (row[idxPrecio] ?? '') : (row[3] ?? '');
     const rawPhoto = idxFoto >= 0 ? (row[idxFoto] ?? '') : (row[4] ?? '');
+
+    if (isPackagingCategory(rawCat)) {
+      packaging = {
+        name: rawName.trim() || '🎁 ¿Es para regalo?',
+        description: rawDesc.trim(),
+        imageUrl: buildGoogleDriveImageUrl(rawPhoto),
+      };
+      continue;
+    }
+
+    if (isShowcaseCategory(rawCat)) {
+      const title = rawName.trim();
+      const targetCategory = mapSheetCategory(title);
+      if (title && targetCategory) {
+        showcaseCards.push({
+          id: `portada-${targetCategory.id}-${r}`,
+          title,
+          categoryId: targetCategory.id,
+          imageUrl: buildGoogleDriveImageUrl(rawPhoto),
+        });
+      }
+      continue;
+    }
 
     const name = rawName.trim();
     const mappedCategory = mapSheetCategory(rawCat);
@@ -196,10 +251,10 @@ export function parseCatalogFromCsv(csvText: string): ProductItem[] {
     });
   }
 
-  return products;
+  return { products, packaging, showcaseCards };
 }
 
-export async function fetchGoogleSheetsCatalog(csvUrl: string): Promise<ProductItem[]> {
+export async function fetchGoogleSheetsCatalog(csvUrl: string): Promise<ParsedSheetCatalog> {
   const separator = csvUrl.includes('?') ? '&' : '?';
   const freshUrl = `${csvUrl}${separator}_ts=${Date.now()}`;
 
@@ -213,5 +268,5 @@ export async function fetchGoogleSheetsCatalog(csvUrl: string): Promise<ProductI
   }
 
   const csvText = await response.text();
-  return parseCatalogFromCsv(csvText);
+  return parseCatalogWithPackagingFromCsv(csvText);
 }
