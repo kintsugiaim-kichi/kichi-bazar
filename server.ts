@@ -17,6 +17,8 @@ const GOOGLE_SHEETS_CSV_URL =
 const PREGUNTAS_BOT_CSV_URL = process.env.VITE_PREGUNTAS_BOT_CSV_URL || '';
 
 const ORIFLAME_STORE_URL = 'https://shop.oriflame.com/CL-kichi8/cSSgjkmIV';
+const WHATSAPP_FORM_ORDER_URL =
+  'https://wa.me/569XXXXXXXX?text=Hola%20Kichi!%20Me%20gustaría%20hacer%20un%20pedido%20o%20solicitar%20el%20formulario%20de%20personalizados';
 
 interface ChatHistoryItem {
   role: 'user' | 'assistant';
@@ -35,50 +37,55 @@ export interface BotFaqItem {
   buttonLabel: string;
   answer: string;
   whatsappText: string;
+  whatsappButtonLabel?: string;
+  customWhatsappUrl?: string;
+  isGreenWhatsapp?: boolean;
   showOriflameButton?: boolean;
 }
 
 const DEFAULT_BOT_FAQS: BotFaqItem[] = [
   {
-    id: 'fandom-simpatia',
-    buttonLabel: '🦙 ¿Qué es Fandom Simpatía Selectiva?',
+    id: 'pedido-o-personalizado',
+    buttonLabel: '¿Cómo hago un pedido o pido algo personalizado?',
     answer:
-      'Es nuestro fandom y espacio creativo para quienes nos identificamos con una forma de ser no tan popular y muchas veces incomprendida. Porque no es obligación ser iguales a todos, y nuestra manera particular de ser también tiene un espacio en este mundo y puede aportar luz, a nuestra propia manera. 🦙✨ La línea de productos Simpatía Selectiva es nuestro lienzo de expresión para conectar con quienes tienen un sentido del humor y personalidad, que no siempre sigue el guion social.',
+      'Para productos disponibles en stock solo debes escribirnos por WhatsApp indicándonos tu elección. Si deseas crear un diseño personalizado desde cero, te enviaremos nuestro formulario especial para tomar cada detalle con cariño.',
     whatsappText:
-      '¡Hola Kichi BAZAR! Quiero conocer más sobre la colección Fandom Simpatía Selectiva 🦙✨',
+      'Hola Kichi! Me gustaría hacer un pedido o solicitar el formulario de personalizados',
+    whatsappButtonLabel: 'Pedir o solicitar formulario por WhatsApp',
+    customWhatsappUrl: WHATSAPP_FORM_ORDER_URL,
+    isGreenWhatsapp: true,
   },
   {
-    id: 'productos-disponibles',
-    buttonLabel: '✨ ¿Qué productos tienen disponibles?',
+    id: 'pagos-y-entregas',
+    buttonLabel: '¿Cuáles son las formas de pago y entregas?',
     answer:
-      'En Kichi BAZAR tenemos detalles pensados para regalar o regalarte: tazones personalizados y mágicos, totebags con diseños exclusivos, kits de regalo armados con cariño y una selección especial de belleza y cuidado personal Oriflame. ¡Revisa nuestro catálogo aquí mismo!',
+      'Trabajamos con transferencia electrónica y efectivo (solo en retiros). Si retiras tu pedido en Iquique, reservas tu producto o inicias tu diseño personalizado con un 50% de abono vía transferencia, y pagas el 50% restante en efectivo o transferencia al retirar. Si prefieres envío a domicilio (coordinado con Kichi según disponibilidad de ruta o vía Uber Flash gestionado por la/el cliente), el pedido debe estar pagado al 100% vía transferencia antes de despachar. Por ahora realizamos entregas exclusivamente dentro de nuestra zona.',
     whatsappText:
-      '¡Hola Kichi BAZAR! Vi el catálogo en la página y quiero consultar disponibilidad de un producto.',
+      '¡Hola Kichi BAZAR! Quiero coordinar el pago y entrega de mi pedido en Iquique.',
   },
   {
-    id: 'como-hacer-pedido',
-    buttonLabel: '🛍️ ¿Cómo hago un pedido?',
+    id: 'empaques-regalo',
+    buttonLabel: '¿Tienen empaques para regalo?',
     answer:
-      '¡Es súper fácil y personalizado! Elige lo que te guste del catálogo, haz clic en el botón de WhatsApp aquí abajo para contarnos qué necesitas y te enviaremos un formulario breve para dejar todos los detalles de tu pedido y entrega ordenados.',
+      '¡Todos nuestros pedidos incluyen gratis nuestro KichiEmpaque Ecológico hecho a mano con reciclaje creativo para cuidar la Pachamama! 🌱 Además, si quieres llevarlo listo para celebrar, puedes sumar una Envoltura Tradicional (papel, cinta y tarjeta) o una Bolsa de Regalo por un pequeño valor adicional. ¡Mira las opciones y valores en la esquina superior de cada categoría! 🎁',
     whatsappText:
-      '¡Hola Kichi BAZAR! Quiero hacer un pedido, por favor envíame el formulario para coordinar.',
+      '¡Hola Kichi BAZAR! Quisiera consultar por las opciones de empaque para regalo.',
   },
   {
-    id: 'diseno-personalizado',
-    buttonLabel: '🎨 Quiero un diseño personalizado',
+    id: 'demora-pedido',
+    buttonLabel: '¿Cuánto demora mi pedido?',
     answer:
-      '¡Nos encanta crear piezas únicas! Podemos estampar tu nombre, una frase especial o esa imagen que tanto te gusta en tazones o totebags. Haz clic en el botón de WhatsApp aquí abajo, cuéntanos tu idea y te enviamos nuestro formulario rápido para dejar tu pedido agendado.',
+      'Los productos que tenemos listos en stock cuentan con coordinación rápida en Iquique. En cambio, los diseños personalizados toman unos días hábiles de elaboración artesanal, plazo que confirmamos contigo apenas recibimos tu formulario y tu abono del 50%.',
     whatsappText:
-      '¡Hola Kichi BAZAR! Quiero cotizar y agendar un diseño personalizado en tazón o totebag.',
+      '¡Hola Kichi BAZAR! Quisiera saber el tiempo estimado de entrega para mi pedido.',
   },
   {
-    id: 'catalogo-oriflame',
-    buttonLabel: '💄 Catálogo Oriflame',
+    id: 'cambios-devoluciones',
+    buttonLabel: '¿Hacen cambios o devoluciones?',
     answer:
-      'Trabajamos con productos originales de belleza, fragancias y cuidado de la piel de Oriflame por encargo y con stock seleccionado. Escríbenos directo a WhatsApp para enviarte el catálogo digital actualizado de esta campaña y asesorarte con lo que necesites.',
+      'En pedidos personalizados trabajamos estrictamente según las indicaciones y textos que registras en nuestro formulario (y confirmas antes de producir), por lo que no realizamos cambios ni devoluciones por arrepentimiento o errores en los datos enviados; además, el 50% de abono no es reembolsable una vez iniciado el diseño o compra de materiales. Solo cubrimos garantía por fallas de fabricación o error de transcripción nuestro reportado dentro de las primeras 24 horas. En envíos por Uber Flash gestionados por la/el cliente, embalamos cada pieza frágil con máxima protección y te enviamos foto antes de despachar; una vez entregado al transporte externo, el traslado queda bajo responsabilidad del servicio de reparto.',
     whatsappText:
-      '¡Hola Kichi BAZAR! Por favor envíame el catálogo digital actualizado de Oriflame de esta campaña 💄',
-    showOriflameButton: true,
+      '¡Hola Kichi BAZAR! Tengo una consulta sobre políticas de pedido o garantía.',
   },
 ];
 
@@ -141,25 +148,45 @@ function parseCsvRows(csvText: string): string[][] {
   return rows.filter((row) => row.some((cell) => cell.trim() !== ''));
 }
 
-async function loadLiveSheetCatalog(): Promise<CatalogSummaryItem[]> {
+async function loadLiveSheetData(): Promise<{
+  catalog: CatalogSummaryItem[];
+  packaging: CatalogSummaryItem | null;
+}> {
   try {
     const separator = GOOGLE_SHEETS_CSV_URL.includes('?') ? '&' : '?';
     const response = await fetch(`${GOOGLE_SHEETS_CSV_URL}${separator}_ts=${Date.now()}`, {
       cache: 'no-store',
     });
-    if (!response.ok) return [];
+    if (!response.ok) return { catalog: [], packaging: null };
     const csvText = await response.text();
     const rows = parseCsvRows(csvText);
-    if (rows.length < 2) return [];
+    if (rows.length < 2) return { catalog: [], packaging: null };
 
-    return rows.slice(1).map((row) => ({
-      category: (row[0] ?? '').trim(),
-      name: (row[1] ?? '').trim(),
-      description: (row[2] ?? '').trim(),
-      price: (row[3] ?? '').trim(),
-    }));
+    const catalog: CatalogSummaryItem[] = [];
+    let packaging: CatalogSummaryItem | null = null;
+
+    for (const row of rows.slice(1)) {
+      const category = (row[0] ?? '').trim();
+      const item: CatalogSummaryItem = {
+        category,
+        name: (row[1] ?? '').trim(),
+        description: (row[2] ?? '').trim(),
+        price: (row[3] ?? '').trim(),
+      };
+      const normCat = normalizeKey(category);
+      if (normCat === 'portada' || normCat === 'portadas') {
+        continue;
+      }
+      if (normCat === 'empaques' || normCat === 'empaque') {
+        packaging = item;
+      } else {
+        catalog.push(item);
+      }
+    }
+
+    return { catalog, packaging };
   } catch {
-    return [];
+    return { catalog: [], packaging: null };
   }
 }
 
@@ -173,7 +200,6 @@ async function findPreguntasBotCsvUrl(): Promise<string | null> {
     if (!pubHtmlRes.ok) return null;
     const html = await pubHtmlRes.text();
 
-    // Busca una pestaña llamada "Preguntas_Bot" (o "Preguntas Bot") en items.push({...})
     const regex = /items\.push\(\{[^}]*name:\s*"([^"]+)"[^}]*gid:\s*"([0-9]+)"/g;
     let match: RegExpExecArray | null;
     while ((match = regex.exec(html)) !== null) {
@@ -223,6 +249,10 @@ async function loadLiveBotFaqs(): Promise<BotFaqItem[]> {
       if (!buttonLabel || !answer) continue;
 
       const normalizedBtn = normalizeKey(buttonLabel);
+      if (normalizedBtn.includes('simpatia') || normalizedBtn.includes('fandom')) {
+        continue;
+      }
+
       parsedFaqs.push({
         id: `faq-${r}`,
         buttonLabel,
@@ -242,6 +272,7 @@ async function loadLiveBotFaqs(): Promise<BotFaqItem[]> {
 
 function buildSystemInstruction(
   catalogItems: CatalogSummaryItem[],
+  packaging: CatalogSummaryItem | null,
   faqs: BotFaqItem[]
 ): string {
   const catalogBlock =
@@ -254,6 +285,10 @@ function buildSystemInstruction(
           .join('\n')
       : 'Actualmente no hay productos cargados desde la planilla en este instante; invita amablemente a consultar por WhatsApp.';
 
+  const packagingBlock = packaging
+    ? `${packaging.name}: ${packaging.description}`
+    : 'Todos los pedidos incluyen gratis KichiEmpaque Ecológico hecho a mano con reciclaje creativo para cuidar la Pachamama 🌱. Adicionalmente se puede sumar Envoltura Tradicional (papel, cinta y tarjeta) o Bolsa de Regalo por un valor adicional.';
+
   const faqsBlock = faqs
     .map((f, idx) => `${idx + 1}. Pregunta "${f.buttonLabel}" -> ${f.answer}`)
     .join('\n');
@@ -261,30 +296,27 @@ function buildSystemInstruction(
   return `Eres KichiBot, la anfitriona virtual de Kichi BAZAR (representada por el colibrí del logo).
 
 PERSONALIDAD Y TONO:
-- Hablas en español chileno cercano, cálido, empático y respetuoso, como una buena anfitriona que ayuda con gusto a encontrar un lindo detalle. Nunca presiones ni impongas una compra; acompaña con calma y calidez.
-- Mantén tus respuestas claras, naturales y concisas (2 a 4 oraciones o lista breve de productos cuando corresponda), evitando sonar robótica.
-- IDENTIDAD FANDOM SIMPATÍA SELECTIVA (MUY IMPORTANTE): Reconoce siempre a "Simpatía Selectiva" como nuestro fandom y espacio creativo para quienes nos identificamos con una forma de ser no tan popular y muchas veces incomprendida — porque no es obligación ser iguales a todos, y nuestra manera particular de ser también tiene un espacio en este mundo y puede aportar luz, a nuestra propia manera 🦙✨. La línea de productos Simpatía Selectiva es nuestro lienzo de expresión para conectar con quienes tienen un sentido del humor y personalidad, que no siempre sigue el guion social.
-- REGLA LLAMA / FANDOM SIMPATÍA SELECTIVA: Si el cliente menciona a la llama, el fandom o "Simpatía Selectiva", responde PRIMERO con un guiño cómplice, irónico y divertido haciendo honor a la mirada despectiva pero adorable de la llama 🦙 y esa identidad creativa, ANTES de mostrarle los productos disponibles de la colección Simpatía Selectiva con sus descripciones y precios.
-- REGLA COLECCIÓN KUTIÑA: Si preguntan por la "Colección Kutiña" o "Kutiña", destaca con orgullo su inspiración andina y significado cultural (el valor de nuestras raíces andinas, la identidad del norte, el sentido de encuentro y retorno con cariño), y luego muestra los productos Kutiña disponibles en el catálogo con sus precios.
+- Hablas en español chileno cercano, cálido, educado, estético y empático, como una buena anfitriona que ayuda con gusto a encontrar un lindo detalle. Nunca presiones ni impongas una compra; acompaña con calma y calidez.
+- Mantén tus respuestas claras, naturales y concisas (2 a 4 oraciones o lista breve cuando corresponda).
+- Si preguntan por la "Colección Kutiña" o "Kutiña", destaca con orgullo su inspiración andina y significado cultural, y muestra los productos Kutiña disponibles en el catálogo con sus precios.
 
-PREGUNTAS FRECUENTES ACTUALIZADAS (pestaña Preguntas_Bot):
+POLÍTICAS DE KICHI BAZAR (RESPONDE CON EXACTITUD):
 ${faqsBlock}
 
-CONOCIMIENTO DEL CATÁLOGO EN VIVO (desde Google Sheets):
+EMPAQUES PARA REGALO:
+${packagingBlock}
+
+CATÁLOGO EN VIVO (desde Google Sheets):
 ${catalogBlock}
 
-BELLEZA ORIFLAME Y BENEFICIOS:
-- Kichi BAZAR también trabaja con productos originales de belleza, fragancias y cuidado de la piel de Oriflame (${ORIFLAME_STORE_URL}) por encargo y con stock seleccionado.
-- Los clientes pueden pedir el catálogo digital actualizado por WhatsApp o registrarse gratis como clientes en la plataforma y descargar la app oficial de Oriflame para comprar con beneficios especiales y envíos gratis según promociones vigentes.
-- Antes de registrarse, recuérdales verificar que diga: "fuiste invitado por Verónica Sol Cisternas/ kichi8".
+BELLEZA ORIFLAME:
+- Kichi BAZAR ofrece la línea europea de belleza, fragancias y cuidado de la piel Oriflame (${ORIFLAME_STORE_URL}).
+- Los clientes pueden registrarse gratis como clientes en la plataforma y descargar la app oficial de Oriflame para comprar con beneficios, verificando siempre que diga: "fuiste invitado por Verónica Sol Cisternas/ kichi8".
 
-ENTREGAS Y ENVÍOS:
-- Si preguntan por entregas, despacho o envíos: explica con claridad que pueden retirar en Iquique y que hacemos entregas locales coordinadas, con valores a convenir.
-
-CIERRE HACIA WHATSAPP (OBLIGATORIO EN TODA RESPUESTA):
+CIERRE HACIA WHATSAPP:
 - SIEMPRE pon \`showWhatsappButton: true\` al final de cada respuesta para que el cliente tenga acceso directo a WhatsApp.
-- Redacta en \`whatsappSummary\` un mensaje amable, claro y prellenado para WhatsApp resumiendo el producto elegido, diseño personalizado, catálogo Oriflame o consulta del cliente (por ejemplo: "¡Hola Kichi BAZAR! Me gustaría pedir/consultar por: ...").
-- Escribe en \`whatsappButtonLabel\` un texto breve y claro (ej: "Abrir WhatsApp", "Pedir por WhatsApp", "Personalizar por WhatsApp" o "Pedir catálogo Oriflame").
+- Redacta en \`whatsappSummary\` un mensaje amable, claro y prellenado para WhatsApp resumiendo lo que el cliente busca, quiere personalizar o consultar.
+- Escribe en \`whatsappButtonLabel\` un texto breve y claro (ej: "Pedir o solicitar formulario por WhatsApp" o "Abrir WhatsApp").
 - Si preguntan por Oriflame, activa \`showOriflameButton: true\`.`;
 }
 
@@ -320,14 +352,14 @@ async function startServer() {
     }
 
     try {
-      const [liveCatalog, liveFaqs] = await Promise.all([
-        loadLiveSheetCatalog(),
+      const [sheetData, liveFaqs] = await Promise.all([
+        loadLiveSheetData(),
         loadLiveBotFaqs(),
       ]);
 
       const catalogForPrompt =
-        liveCatalog.length > 0
-          ? liveCatalog
+        sheetData.catalog.length > 0
+          ? sheetData.catalog
           : Array.isArray(clientCatalog)
             ? clientCatalog
             : [];
@@ -356,7 +388,11 @@ async function startServer() {
         model: 'gemini-4-hydrogen',
         contents: conversationContents,
         config: {
-          systemInstruction: buildSystemInstruction(catalogForPrompt, liveFaqs),
+          systemInstruction: buildSystemInstruction(
+            catalogForPrompt,
+            sheetData.packaging,
+            liveFaqs
+          ),
           responseMimeType: 'application/json',
           responseSchema: {
             type: Type.OBJECT,
